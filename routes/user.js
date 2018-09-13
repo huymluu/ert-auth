@@ -1,6 +1,8 @@
 'use strict'
 
 const passport = require('passport')
+const db = require('../db')
+const _ = require('lodash')
 
 module.exports.info = [
   passport.authenticate('bearer', {session: false}),
@@ -29,5 +31,26 @@ module.exports.checkToken = [
   passport.authenticate('bearer', {session: false}),
   (request, response) => {
     response.sendStatus(200)
+  }
+]
+
+module.exports.fetchAll = [
+  passport.authenticate('bearer', {session: false}),
+  (request, response) => {
+
+    db.users.findAll()
+      .then((results) => {
+        response.json(_.map(results, function (user) {
+          return {
+            id: user.id,
+            username: user.username,
+            full_name: user.full_name,
+            dob: user.dob,
+          }
+        }))
+      })
+      .catch(function (error) {
+        response.status(500).json(error)
+      })
   }
 ]

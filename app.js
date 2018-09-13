@@ -50,6 +50,7 @@ app.post('/oauth/token', routes.oauth2.token)
 // API
 app.get('/api/check_token', routes.user.checkToken)
 app.get('/api/me', routes.user.me)
+app.get('/api/users', routes.user.fetchAll)
 app.get('/api/userinfo', routes.user.info)
 app.get('/api/clientinfo', routes.client.info)
 

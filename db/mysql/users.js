@@ -25,3 +25,7 @@ module.exports.findByUsername = (username, done) => {
       done(error)
     })
 }
+
+module.exports.findAll = () => {
+  return connection.query('SELECT * FROM users')
+}
