@@ -1,7 +1,7 @@
 'use strict'
 
-var mysql = require('promise-mysql')
-var connection = undefined
+const mysql = require('promise-mysql')
+let connection = undefined
 
 const users = require('./users')
 const clients = require('./clients')
@@ -13,22 +13,20 @@ module.exports = {
   clients,
   accessTokens,
   authorizationCodes,
-  connect: function (host, port, database, user, password, callback) {
+  init: function (config) {
     mysql.createConnection({
-      host: host,
-      port: port,
-      user: user,
-      password: password,
-      database: database
+      host: config.host,
+      port: config.port,
+      user: config.user,
+      password: config.password,
+      database: config.database
     }).then(function (conn) {
       connection = conn
-      console.log('DB connected!')
+      console.log('MySQL DB initialized')
 
       users.init(connection)
       clients.init(connection)
       accessTokens.init(connection)
-
-      callback && callback()
     })
   },
 }

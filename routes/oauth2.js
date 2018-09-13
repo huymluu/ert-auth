@@ -3,7 +3,7 @@
 const oauth2orize = require('oauth2orize');
 const passport = require('passport');
 const login = require('connect-ensure-login');
-const db = require('../db/mysql');
+const db = require('../db');
 const utils = require('../utils');
 
 // Create OAuth 2.0 server

@@ -1,22 +1,6 @@
-var mysql = require('promise-mysql')
+const config = require('config')
 
-var connection = undefined
+let db = require('./' + config.server.database.name)
+db.init(config.server.database)
 
-module.exports = {
-  connect: function (host, port, database, user, password, callback) {
-    mysql.createConnection({
-      host: host,
-      port: port,
-      user: user,
-      password: password,
-      database: database
-    }).then(function (conn) {
-      connection = conn
-      console.log('DB connected!')
-      callback && callback()
-    })
-  },
-  getConnection: function () {
-    return connection
-  }
-}
+module.exports = db
