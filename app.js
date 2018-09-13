@@ -48,6 +48,8 @@ app.post('/dialog/authorize/decision', routes.oauth2.decision)
 app.post('/oauth/token', routes.oauth2.token)
 
 // API
+app.get('/api/check_token', routes.user.checkToken)
+app.get('/api/me', routes.user.me)
 app.get('/api/userinfo', routes.user.info)
 app.get('/api/clientinfo', routes.client.info)
 
