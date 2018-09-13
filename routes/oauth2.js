@@ -22,10 +22,10 @@ const server = oauth2orize.createServer();
 // simple matter of serializing the client's ID, and deserializing by finding
 // the client by ID from the database.
 
-server.serializeClient((client, done) => done(null, client.id));
+server.serializeClient((client, done) => done(null, client.clientId))
 
 server.deserializeClient((id, done) => {
-  db.clients.findById(id, (error, client) => {
+  db.clients.findByClientId(id, (error, client) => {
     if (error) return done(error);
     return done(null, client);
   });
@@ -47,7 +47,7 @@ server.deserializeClient((id, done) => {
 
 server.grant(oauth2orize.grant.code((client, redirectUri, user, ares, done) => {
   const code = utils.getUid(16);
-  db.authorizationCodes.save(code, client.id, redirectUri, user.id, (error) => {
+  db.authorizationCodes.save(code, client.clientId, redirectUri, user.id, (error) => {
     if (error) return done(error);
     return done(null, code);
   });
@@ -76,9 +76,9 @@ server.grant(oauth2orize.grant.token((client, user, ares, done) => {
 server.exchange(oauth2orize.exchange.code((client, code, redirectUri, done) => {
   db.authorizationCodes.find(code, (error, authCode) => {
     if (error) return done(error);
-    if (client.id !== authCode.clientId) return done(null, false);
+    if (client.clientId !== authCode.clientId) return done(null, false);
     if (redirectUri !== authCode.redirectUri) return done(null, false);
-    
+
     const token = utils.getUid(256);
     db.accessTokens.save(token, authCode.userId, authCode.clientId, (error) => {
       if (error) return done(error);
@@ -163,14 +163,20 @@ module.exports.authorization = [
     });
   }, (client, user, done) => {
     // Check if grant request qualifies for immediate approval
-    
+    console.log('Authorizing client: ' + client.clientId + ' user: ' + user.id)
     // Auto-approve
-    if (client.isTrusted) return done(null, true);
-    
+    if (client.isTrusted) {
+      console.log('Trusted client. Auto approve')
+      return done(null, true)
+    }
+
+    console.log('Check already authorize by finding exist access token...')
     db.accessTokens.findByUserIdAndClientId(user.id, client.clientId, (error, token) => {
+      console.log('Access token found. Auto approve')
       // Auto-approve
-      if (token) return done(null, true);
-      
+      if (token) return done(null, true)
+
+      console.log('Access token not found. Ask user')
       // Otherwise ask user
       return done(null, false);
     });

@@ -12,7 +12,7 @@
         </div>
         <div class="card-body"  style="padding: 20px;">
             <p>Hi <%= user.full_name %>!</p>
-            <p><b><%= client.name %></b> is requesting access to your account.</p>
+            <p><b><%= client.clientName %></b> is requesting access to your account.</p>
             <form action="/dialog/authorize/decision" method="post">
               <input name="transaction_id" type="hidden" value="<%= transactionId %>" />
               <div>

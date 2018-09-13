@@ -16,17 +16,13 @@ INSERT INTO users (username, password, full_name, dob) VALUES ("david", "123", "
 INSERT INTO users (username, password, full_name, dob) VALUES ("frank", "123", "Frank Shannon", "1950-09-09");
 
 CREATE TABLE IF NOT EXISTS oauth_clients (
-  id INT NOT NULL AUTO_INCREMENT,
-  client_name TEXT,
-  client_id TEXT,
-  client_secret TEXT,
-  redirect_uri TEXT,
-  is_trusted TEXT,
-  grants TEXT,
-  PRIMARY KEY (id)
+  client_id VARCHAR(256) NOT NULL UNIQUE,
+  client_name TEXT NOT NULL,
+  client_secret TEXT NOT NULL,
+  redirect_uri TEXT
 );
 
-INSERT INTO oauth_clients (client_name, client_id, client_secret, redirect_uri, is_trusted, grants) VALUES ("ERT user management", "abc123", "ssh-secret", "", "false", "code");
+INSERT INTO oauth_clients (client_name, client_id, client_secret, redirect_uri) VALUES ("ERT user management", "abc123", "ssh-secret", "");
 
 CREATE TABLE IF NOT EXISTS oauth_tokens (
   access_token TEXT NOT NULL,
