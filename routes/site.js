@@ -1,22 +1,24 @@
-'use strict';
+'use strict'
 
-const passport = require('passport');
-const login = require('connect-ensure-login');
+const passport = require('passport')
+const login = require('connect-ensure-login')
 
-module.exports.index = (request, response) => response.render('index');
+module.exports.index = (request, response) => {
+  response.render('index', {user: request.user})
+}
 
-module.exports.loginForm = (request, response) => response.render('login');
+module.exports.loginForm = (request, response) => response.render('login')
 
-module.exports.loginError = (request, response) => response.render('loginError');
+module.exports.loginError = (request, response) => response.render('loginError')
 
-module.exports.login = passport.authenticate('local', { successReturnToOrRedirect: '/', failureRedirect: '/loginError' });
+module.exports.login = passport.authenticate('local', {successReturnToOrRedirect: '/', failureRedirect: '/loginError'})
 
 module.exports.logout = (request, response) => {
-  request.logout();
-  response.redirect('/');
-};
+  request.logout()
+  response.redirect('/')
+}
 
 module.exports.account = [
   login.ensureLoggedIn(),
-  (request, response) => response.render('account', { user: request.user }),
-];
+  (request, response) => response.render('account', {user: request.user}),
+]
