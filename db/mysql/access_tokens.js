@@ -10,27 +10,27 @@ module.exports.find = (key, done) => {
   connection.query('SELECT * FROM oauth_tokens WHERE access_token = ?', [key])
     .then(function (results) {
       const data = results[0]
-      done(null, {
-        userId: data.user_id,
-        clientId: data.client_id
-      })
+      if (!data) throw 'Not found token: ' + key
+      else {
+        done(null, {
+          userId: data.user_id,
+          clientId: data.client_id
+        })
+      }
     })
     .catch(function (error) {
       done(error)
     })
 }
 
-module.exports.findByUserIdAndClientId = (userId, clientId, done) => {
-  connection.query('SELECT * FROM oauth_tokens WHERE user_id = ? AND client_id = ?', [userId, clientId])
+module.exports.findByUserIdAndClientId = (userId, clientId) => {
+  return connection.query('SELECT * FROM oauth_tokens WHERE user_id = ? AND client_id = ?', [userId, clientId])
     .then(function (results) {
       const data = results[0]
-      done(null, {
-        userId: data.user_id,
-        clientId: data.client_id
-      })
-    })
-    .catch(function (error) {
-      done(error)
+      if (!data) throw 'Not found token for userId=' + userId + ', clientId=' + clientId
+      else {
+        return data
+      }
     })
 }
 
@@ -47,4 +47,8 @@ module.exports.save = (token, userId, clientId, done) => {
     .catch(function (error) {
       done(error)
     })
+}
+
+module.exports.deleteAllByUserId = (userId) => {
+  return connection.query('DELETE FROM oauth_tokens WHERE user_id = ?', [userId])
 }

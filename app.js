@@ -47,6 +47,7 @@ app.get('/account', routes.site.account)
 app.get('/dialog/authorize', routes.oauth2.authorization)
 app.post('/dialog/authorize/decision', routes.oauth2.decision)
 app.post('/oauth/token', routes.oauth2.token)
+app.get('/revokeAll', routes.oauth2.revokeAll)
 
 // API
 app.get('/api/check_token', routes.user.checkToken)

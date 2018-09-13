@@ -79,11 +79,18 @@ server.exchange(oauth2orize.exchange.code((client, code, redirectUri, done) => {
     if (client.clientId !== authCode.clientId) return done(null, false);
     if (redirectUri !== authCode.redirectUri) return done(null, false);
 
-    const token = utils.getUid(256);
-    db.accessTokens.save(token, authCode.userId, authCode.clientId, (error) => {
-      if (error) return done(error);
-      return done(null, token);
-    });
+    // Find exist token
+    db.accessTokens.findByUserIdAndClientId(authCode.userId, authCode.clientId)
+      .then((token) => {
+        return done(null, token.access_token);
+      })
+      .catch((error) => {
+        const token = utils.getUid(256);
+        db.accessTokens.save(token, authCode.userId, authCode.clientId, (error) => {
+          if (error) return done(error);
+          return done(null, token);
+        });
+      })
   });
 }));
 
@@ -171,15 +178,17 @@ module.exports.authorization = [
     }
 
     console.log('Check already authorize by finding exist access token...')
-    db.accessTokens.findByUserIdAndClientId(user.id, client.clientId, (error, token) => {
-      console.log('Access token found. Auto approve')
-      // Auto-approve
-      if (token) return done(null, true)
+    db.accessTokens.findByUserIdAndClientId(user.id, client.clientId)
+      .then((token) => {
+        console.log('Access token found. Auto approve')
+        // Auto-approve
+        if (token) return done(null, true)
 
-      console.log('Access token not found. Ask user')
-      // Otherwise ask user
-      return done(null, false);
-    });
+        console.log('Access token not found. Ask user')
+        // Otherwise ask user
+        return done(null, false)
+      })
+      .catch((error) => { return done(null, false) })
   }),
   (request, response) => {
     response.render('dialog', { transactionId: request.oauth2.transactionID, user: request.user, client: request.oauth2.client });
@@ -211,3 +220,13 @@ exports.token = [
   server.token(),
   server.errorHandler(),
 ];
+
+exports.revokeAll = [
+  login.ensureLoggedIn(),
+  (request, response) => {
+    db.accessTokens.deleteAllByUserId(request.user.id)
+      .then(() => {
+        response.redirect('/')
+      })
+  },
+]
