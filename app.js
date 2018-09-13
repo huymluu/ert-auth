@@ -54,7 +54,8 @@ app.get('/api/me', routes.user.me)
 app.get('/api/users', routes.user.fetchAll)
 app.patch('/api/user/:id', routes.user.edit)
 app.post('/api/user', routes.user.add)
-app.get('/api/userinfo', routes.user.info)
+
+// Internal API
 app.get('/api/clientinfo', routes.client.info)
 
 app.listen(config.server.port, config.server.host)
