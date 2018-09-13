@@ -1,11 +1,28 @@
-<p>Hi <%= user.name %>!</p>
-<p><b><%= client.name %></b> is requesting access to your account.</p>
-<p>Do you approve?</p>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>ERT Auth Server</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+  </head>
+  <body>
+    <div class="container col-md-5" style="margin-top: 40px;">
+      <div class="card">
+        <div class="card-header">
+          Authorize application
+        </div>
+        <div class="card-body"  style="padding: 20px;">
+            <p>Hi <%= user.full_name %>!</p>
+            <p><b><%= client.name %></b> is requesting access to your account.</p>
+            <form action="/dialog/authorize/decision" method="post">
+              <input name="transaction_id" type="hidden" value="<%= transactionId %>" />
+              <div>
+                <input type="submit" value="Allow access" id="allow" class="btn btn-primary btn-block" />
+                <input type="submit" value="Deny" name="cancel" id="deny" class="btn btn-secondary btn-block"/>
+              </div>
+            </form>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
 
-<form action="/dialog/authorize/decision" method="post">
-  <input name="transaction_id" type="hidden" value="<%= transactionId %>" />
-  <div>
-    <input type="submit" value="Allow" id="allow" />
-    <input type="submit" value="Deny" name="cancel" id="deny" />
-  </div>
-</form>
