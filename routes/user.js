@@ -54,3 +54,32 @@ module.exports.fetchAll = [
       })
   }
 ]
+
+function validateDate (dateString) {
+  let date = new Date(dateString)
+  return date instanceof Date && isFinite(date)
+}
+
+module.exports.edit = [
+  passport.authenticate('bearer', {session: false}),
+  (request, response) => {
+
+    // Validate
+    if (!request.params.id) {
+      response.status(404).send('Invalid user ID')
+    } else if (!validateDate(request.body.dob)) {
+      response.status(400).send('Invalid date of birth. Should be YYYY-MM-DD')
+    } else {
+      db.users.edit(request.params.id, {
+        full_name: request.body.full_name,
+        dob: request.body.dob
+      })
+        .then(() => {
+          response.sendStatus(200)
+        })
+        .catch(function (error) {
+          response.status(500).json(error)
+        })
+    }
+  }
+]

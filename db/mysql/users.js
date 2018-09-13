@@ -29,3 +29,7 @@ module.exports.findByUsername = (username, done) => {
 module.exports.findAll = () => {
   return connection.query('SELECT * FROM users')
 }
+
+module.exports.edit = (id, data) => {
+  return connection.query('UPDATE users SET full_name=?, dob=? WHERE id=?', [data.full_name, data.dob, id])
+}
