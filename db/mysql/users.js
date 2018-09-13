@@ -33,3 +33,10 @@ module.exports.findAll = () => {
 module.exports.edit = (id, data) => {
   return connection.query('UPDATE users SET full_name=?, dob=? WHERE id=?', [data.full_name, data.dob, id])
 }
+
+module.exports.add = (data) => {
+  return connection.query('INSERT INTO users (username, password, full_name, dob) VALUES (?,?,?,?)', [data.username, data.password, data.full_name, data.dob])
+    .catch(function (error) {
+      throw error.sqlMessage
+    })
+}

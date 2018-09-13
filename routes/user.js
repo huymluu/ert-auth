@@ -86,3 +86,33 @@ module.exports.edit = [
     }
   }
 ]
+
+module.exports.add = [
+  passport.authenticate('bearer', {session: false}),
+  (request, response) => {
+
+    // Validate
+    if (!request.body.username) {
+      response.status(400).send('Invalid username')
+    } else if (!request.body.password) {
+      response.status(400).send('Invalid password')
+    } else if (!request.body.full_name) {
+      response.status(400).send('Invalid full name')
+    } else if (!validateDate(request.body.dob)) {
+      response.status(400).send('Invalid date of birth. Should be YYYY-MM-DD')
+    } else {
+      db.users.add({
+        username: request.body.username,
+        password: request.body.password,
+        full_name: request.body.full_name,
+        dob: request.body.dob
+      })
+        .then(() => {
+          response.sendStatus(201)
+        })
+        .catch(function (error) {
+          response.status(500).send(error)
+        })
+    }
+  }
+]
