@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS oauth_clients (
   PRIMARY KEY (id)
 );
 
-INSERT INTO oauth_clients (client_name, client_id, client_secret, redirect_uri, is_trusted, grants) VALUES ("ERT user management", "abc123", "ssh-secret", "", "true", "code");
+INSERT INTO oauth_clients (client_name, client_id, client_secret, redirect_uri, is_trusted, grants) VALUES ("ERT user management", "abc123", "ssh-secret", "", "false", "code");
 
 CREATE TABLE IF NOT EXISTS oauth_tokens (
   access_token TEXT NOT NULL,
