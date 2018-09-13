@@ -10,6 +10,21 @@
       <p class="text-center">
         <% if (user) { %>
           Hello <%= user.full_name %>, you are currently logged in. <a href="/logout">Logout</a>
+            <% if (tokens && tokens.length>0) { %>
+              <div class="container col-md-5" style="margin-top: 40px;">
+                <div class="card">
+                    <div class="card-header">
+                      Authorized clients
+                    </div>
+                    <div class="card-body"  style="padding: 20px;">
+                        <% tokens.forEach(function(token){ %>
+                            <p>Client ID: <%= token.client_id %></p>
+                        <% }); %>
+                    </div>
+                </div>
+                <a href="/revokeAll">Revoke all authorized clients</a>
+              </div>
+            <% } %>
         <% } else { %>
           Please <a href="/login">login</a> first.
         <% } %>

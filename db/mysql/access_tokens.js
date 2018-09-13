@@ -34,6 +34,10 @@ module.exports.findByUserIdAndClientId = (userId, clientId, done) => {
     })
 }
 
+module.exports.findByUserId = (userId) => {
+  return connection.query('SELECT * FROM oauth_tokens WHERE user_id = ?', [userId])
+}
+
 module.exports.save = (token, userId, clientId, done) => {
   connection.query('INSERT INTO oauth_tokens (access_token, access_token_expires_at, client_id, user_id)' +
     'VALUES (?,?,?,?)', [token, '', clientId, userId])

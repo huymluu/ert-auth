@@ -2,9 +2,20 @@
 
 const passport = require('passport')
 const login = require('connect-ensure-login')
+const db = require('../db')
 
 module.exports.index = (request, response) => {
-  response.render('index', {user: request.user})
+  if (request.user) {
+    db.accessTokens.findByUserId(request.user.id)
+      .then(function (results) {
+        response.render('index', {user: request.user, tokens: results})
+      })
+      .catch(function (error) {
+        response.render('index', {user: request.user, tokens: []})
+      })
+  } else {
+    response.render('index', {user: undefined})
+  }
 }
 
 module.exports.loginForm = (request, response) => response.render('login')
