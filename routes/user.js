@@ -56,6 +56,9 @@ module.exports.fetchAll = [
 ]
 
 function validateDate (dateString) {
+  if (!dateString || !dateString.includes('-')) {
+    return false
+  }
   let date = new Date(dateString)
   return date instanceof Date && isFinite(date)
 }
