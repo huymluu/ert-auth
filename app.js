@@ -39,6 +39,7 @@ require('./db')
 
 app.get('/', routes.site.index)
 app.get('/login', routes.site.loginForm)
+app.get('/loginError', routes.site.loginError)
 app.post('/login', routes.site.login)
 app.get('/logout', routes.site.logout)
 app.get('/account', routes.site.account)

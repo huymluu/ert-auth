@@ -7,7 +7,9 @@ module.exports.index = (request, response) => response.render('index');
 
 module.exports.loginForm = (request, response) => response.render('login');
 
-module.exports.login = passport.authenticate('local', { successReturnToOrRedirect: '/', failureRedirect: '/login' });
+module.exports.loginError = (request, response) => response.render('loginError');
+
+module.exports.login = passport.authenticate('local', { successReturnToOrRedirect: '/', failureRedirect: '/loginError' });
 
 module.exports.logout = (request, response) => {
   request.logout();
