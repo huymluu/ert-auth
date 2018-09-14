@@ -2,9 +2,7 @@
 
 This is Auth Server, support OAuth2 with Authorization Code grant.
 
-Please see `./config/default.js` file for server configuration, i.e. port, database...
-
-Here the Auth Server run on port 7000, connects to ERT database server on port 6000
+For simplicity, I combine Auth server and API server into 1 instance.
 
 ## Usage
 
@@ -12,4 +10,34 @@ Here the Auth Server run on port 7000, connects to ERT database server on port 6
 ```
 npm install
 npm start
+```
+
+## Configuration
+
+Please see `./config/default.js` file for server configuration, i.e. port, database...
+
+Here the Auth Server run on port 7000, connects to ERT database server on port 6000
+
+### Endpoints
+
+For user authentication:
+```
+/login
+/logout
+```
+
+For OAuth authorization:
+```
+/dialog/authorize
+/dialog/authorize/decision    # Accept/Deny authorization from other apps
+/oauth/token                  # Exchange authorization code for token
+/revokeAll                    # User revoke all apps authorization
+```
+
+For API resource access:
+```
+/api/check_token    # Validate token
+/api/me             # Get current user info
+/api/users          # Get all user info
+/api/user           # Add new user (POST) and Edit user info (PATCH)
 ```
