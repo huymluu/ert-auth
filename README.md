@@ -53,3 +53,54 @@ docker-compose up -d
 npm install
 npm run dev
 ```
+
+## Detail Flow explanation
+
+### 1. Authorization request
+
+User visit `/dialog/authorize` endpoint with params
+```
+response_type=code
+client_id=<ID>
+redirect_uri=<URL>
+```
+
+Handled by `routes.oauth2.authorization()`:
+
+- Check user logged in (by `connect-ensure-login`)
+- Check valid params (valid client info)
+- Check if user already authorized client (token exist)
+  - If user already authorized client, skip to step 3.
+  - If not, render dialog asking for permission
+
+### 2. Submit decision
+
+In dialog, user submit form to `/dialog/authorize/decision`, which is handle by `routes.oauth2.decision()`
+
+### 3. Redirect to client callback endpoint
+
+An authorization code is generated.
+
+User is redirected to `<redirect_uri>` (served by client app server) with param `code`.
+
+In this endpoint, client app server uses param `code` to exchange for token.
+
+### 4. Exchange for token
+
+Client app exchanges code for token by this OAuth server endpoint `/oauth/token`, request body:
+
+```
+grant_type=authorization_code
+&code=<code>
+&client_id=...
+&client_secret=...
+&redirect_uri=...
+```
+
+In OAuth server, endpoint `/oauth/token` is handled:
+
+- Parse detail information of the `code` (includes userId, clientId)
+- Use those information to find existed token
+- Generate new token if not existed, and response to client app
+
+Now, client app can use the token to access resource.
