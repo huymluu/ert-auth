@@ -3,6 +3,7 @@
 const passport = require('passport')
 const db = require('../db')
 const _ = require('lodash')
+const bcrypt = require('bcrypt');
 
 module.exports.me = [
   passport.authenticate('bearer', {session: false}),
@@ -92,7 +93,7 @@ module.exports.add = [
     } else {
       db.users.add({
         username: request.body.username,
-        password: request.body.password,
+        password: bcrypt.hashSync(request.body.password, 8),
         full_name: request.body.full_name,
         dob: request.body.dob
       })
