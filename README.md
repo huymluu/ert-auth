@@ -4,14 +4,6 @@ This is Auth Server, support OAuth2 with Authorization Code grant.
 
 For simplicity, I combine Auth server and API server into 1 instance.
 
-## Usage
-
-### Start Auth Server
-```
-npm install
-npm start
-```
-
 ## Configuration
 
 Please see `./config/default.js` file for server configuration, i.e. port, database...
@@ -40,4 +32,24 @@ For API resource access:
 /api/me             # Get current user info
 /api/users          # Get all user info
 /api/user           # Add new user (POST) and Edit user info (PATCH)
+```
+
+## Usage
+
+### Run in host machine
+
+```
+npm start
+```
+
+### Run in docker
+
+```
+docker-compose up -d
+```
+
+### For development
+```
+npm install
+npm run dev
 ```

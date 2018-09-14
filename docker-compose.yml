@@ -1,0 +1,13 @@
+version: '2'
+
+services:
+  ertauth:
+    container_name: ertauth
+    image: node:alpine
+    ports:
+      - 7000:7000
+    volumes:
+      - ./:/ert-auth
+    working_dir: /ert-auth
+    command: npm start
+    network_mode: "host"
