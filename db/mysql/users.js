@@ -32,6 +32,9 @@ module.exports.findAll = () => {
 
 module.exports.edit = (id, data) => {
   return connection.query('UPDATE users SET full_name=?, dob=? WHERE id=?', [data.full_name, data.dob, id])
+    .catch(function (error) {
+      throw error.sqlMessage
+    })
 }
 
 module.exports.add = (data) => {
